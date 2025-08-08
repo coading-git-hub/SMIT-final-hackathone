@@ -11,8 +11,10 @@ import styleRoutes from './routes/styles.js'
 import errorHandler from './middlewares/errorHandler.js'
 
 const app = express()
+// Trust proxy for secure cookies behind platforms like Render/Vercel/NGINX
+app.set('trust proxy', 1)
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
 }))
 app.use(express.json());
