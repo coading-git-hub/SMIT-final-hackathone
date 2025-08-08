@@ -13,6 +13,8 @@ const list = {
     seedStyles: `${local}styles/seed`,
     getStyle: (id) => `${local}styles/${id}`,
     addReview: (id) => `${local}styles/${id}/reviews`,
+    updateReview: (id, reviewId) => `${local}styles/${id}/reviews/${reviewId}`,
+    deleteReview: (id, reviewId) => `${local}styles/${id}/reviews/${reviewId}`,
 };
 return list;
 }

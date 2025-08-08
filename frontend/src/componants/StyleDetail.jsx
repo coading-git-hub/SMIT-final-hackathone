@@ -13,6 +13,7 @@ const StyleDetail = () => {
   const [rating, setRating] = useState(0);
   const [text, setText] = useState('');
   const [isAuth, setIsAuth] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -24,6 +25,10 @@ const StyleDetail = () => {
       const data = { url: apis().getAccess };
       const r = await httpAction(data);
       setIsAuth(Boolean(r?.status));
+      if (r?.status) {
+        const u = await httpAction({ url: apis().userProfile });
+        if (u?.status) setUserEmail(u.user?.email || '');
+      }
     };
     load(); // re-fetches from server; httpAction uses no-cache
     checkAuth();
@@ -82,6 +87,23 @@ const StyleDetail = () => {
                   <Rating value={r.rating} readOnly size="small" />
                   <Typography variant="caption">{r.userName}</Typography>
                   <Typography variant="caption" color="text.secondary">{new Date(r.createdAt).toLocaleString()}</Typography>
+                  {isAuth && r.userEmail === userEmail && (
+                    <>
+                      <Button size="small" onClick={async ()=>{
+                        const newText = window.prompt('Update review text', r.text || '');
+                        const newRating = Number(window.prompt('Update rating (1-5)', r.rating));
+                        if (!newRating) return;
+                        const resp = await httpAction({ url: apis().updateReview(style._id, r._id), method: 'PUT', body: { text: newText, rating: newRating } });
+                        if (resp?.status) setStyle(resp.style);
+                      }}>Edit</Button>
+                      <Button size="small" color="error" onClick={async ()=>{
+                        const ok = window.confirm('Delete this review?');
+                        if (!ok) return;
+                        const resp = await httpAction({ url: apis().deleteReview(style._id, r._id), method: 'DELETE' });
+                        if (resp?.status) setStyle(resp.style);
+                      }}>Delete</Button>
+                    </>
+                  )}
                 </Stack>
                 {r.text && <Typography variant="body2" sx={{ mt: 0.5 }}>{r.text}</Typography>}
               </Box>

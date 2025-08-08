@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 const httpAction = async (data) => {
   try {
     const response = await fetch(data.url, {
-      method: data.method ? data.method : "GET",
+      method: data.method || "GET",
       body: data.body ? JSON.stringify(data.body) : null,
       headers: {
         'Content-Type': 'application/json',
@@ -12,21 +12,23 @@ const httpAction = async (data) => {
       cache: 'no-store'
     });
 
-    const result = await response.json();
+    const raw = await response.text();
+    let result;
+    try {
+      result = raw ? JSON.parse(raw) : {};
+    } catch (e) {
+    
+      throw new Error(response.statusText || 'Invalid server response');
+    }
 
     if (!response.ok) {
-//       const error= new Error(result?.message);
-// error.statusCode =  response.status
-//       throw error;
-throw new Error(result?.message)
+      throw new Error(result?.message || response.statusText || 'Request failed');
     }
 
     return result;
 
   } catch (error) {
-  //   console.error(error);
-  //  error.statusCode !== 403 && toast.error(error.message)
-  toast.error(error.message)
+    toast.error(error.message || 'Network error');
   }
 };
 

@@ -56,6 +56,66 @@ export const addReview = async (req, res, next) => {
   }
 };
 
+export const updateReview = async (req, res, next) => {
+  try {
+    const { id, reviewId } = req.params;
+    const { rating, text } = req.body;
+    const style = await Style.findById(id);
+    if (!style) {
+      const err = new Error('Style not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    const review = style.reviews.id(reviewId);
+    if (!review) {
+      const err = new Error('Review not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    if (review.userEmail !== req.email) {
+      const err = new Error('Forbidden');
+      err.statusCode = 403;
+      throw err;
+    }
+    if (rating !== undefined) review.rating = Number(rating);
+    if (text !== undefined) review.text = text;
+    style.recalculateAverageRating();
+    await style.save();
+    res.status(200).json({ status: true, style });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteReview = async (req, res, next) => {
+  try {
+    const { id, reviewId } = req.params;
+    const style = await Style.findById(id);
+    if (!style) {
+      const err = new Error('Style not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    const review = style.reviews.id(reviewId);
+    if (!review) {
+      const err = new Error('Review not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    if (review.userEmail !== req.email) {
+      const err = new Error('Forbidden');
+      err.statusCode = 403;
+      throw err;
+    }
+    review.deleteOne();
+    style.recalculateAverageRating();
+    await style.save();
+    res.status(200).json({ status: true, style });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const seedStyles = async (req, res, next) => {
   try {
     // Reset and seed fresh every time for demo convenience
