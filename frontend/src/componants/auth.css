@@ -1,0 +1,64 @@
+.auth_card{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background-color: white;
+    border-radius: 6px;
+    padding: 1rem;
+}
+.auth_header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.auth_header svg{
+    color: blue;
+    font-size: 1.6rem;
+}
+
+.auth_header p{
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.auth_header span{
+    color: gray;
+    font-size: 14px;
+}
+.otp_inputs{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center};
+.profile_container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 1rem;
+        
+
+    }
+    
+
+.full_name{
+    text-transform: capitalize;
+    font-weight: 600;
+    
+    
+}
+
+.email{
+    font-size: 1rem;
+    color: #666;
+}
+.action{
+    margin-top: 1rem;
+    background-color: blue;
+    font-weight: 600;
+    color: white;
+    font-size: 1rem;
+}
