@@ -24,6 +24,9 @@ app.use(cookieParser())
 app.use('/user', userRoutes)
 app.use('/styles', styleRoutes)
 app.use(errorHandler)
+app.get(`/`,(req,res)=>{
+    res.send("hello")
+})
 
 getConnection()
 app.listen(process.env.PORT,()=>
