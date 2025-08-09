@@ -35,8 +35,6 @@ const httpAction = async (data) => {
 export default httpAction;
 
 
-// import toast from "react-hot-toast";
-
 // const httpAction = async (data) => {
 //   try {
 //     const response = await fetch(data.url, {
